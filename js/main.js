@@ -77,10 +77,11 @@ Date Object
 **************************************************************************************/
 (function(testerTwo){
   "use strict";
-  var todayIs = new Date("June 12th, 2017");
+  // var todayIs = new Date("June 12th, 2017");
+  var todayIs = new Date();
 
-  console.log("#6 stringDate", stringDate);
-  console.assert(stringDate == today.toString(), "#6 Test Failed. Did you set stringDate correctly?");
+  // console.log("#6 stringDate", stringDate);
+  console.assert(todayIs.toString() === (new Date).toString(), "#6 Test Failed. Did you set stringDate correctly?");
 })();
 
 //I can't figure out what I need to do for string date? I keep getting an error saying
@@ -103,8 +104,9 @@ Warm up
 //console.log(add);
 /**************************************************************************************
 ------------ ANSWER -------------------
-it will print 4 because of the const declaration which can have a global scope and a
+inside IFEE, it will print 4 because of the const declaration which can have a global scope and a
 local scope.
+outstide IFEE, it will generate a reference error because add is not defined
 **************************************************************************************/
 
 
@@ -121,12 +123,15 @@ Hoisting
 **************************************************************************************/
 (function(){
   "use strict";
+  //  Date.parse returns the number of milliseconds since 1 January, 1970
+  var birthday = Date.parse('April 21, 1983');
   var date = new Date(birthday);
-  var birthday;
-  bdayMsg();
+  // bdayMsg();
   var bdayMsg = function(){
     return "You were born on " + date.toDateString();
   }
+  //moved function call below function expression because assignment is not hoisted
+  bdayMsg();
   console.log("#5 bdayMsg()", bdayMsg());
   console.assert(bdayMsg() == "You were born on Thu Apr 21 1983", "#5 Test failed. Check function hoisting." )
 })();
@@ -142,12 +147,14 @@ Date object
 - Declare a variable: 'stringDate'.
 - Set the value of 'stringDate' to be a string of today's date.
 **************************************************************************************/
-// (function(testerTwo){
-//   "use strict";
-//   var today = new Date();
-//   console.log("#6 stringDate", stringDate)
-//   console.assert(stringDate == testerTwo, "#6 Test Failed. Did you set stringDate correctly?")
-// })(testerTwo);
+(function(){
+  "use strict";
+  var today = new Date();
+  //toString converts object to a string
+  var stringDate = today.toString();
+  console.log("#6 stringDate", stringDate)
+  console.assert(stringDate == today.toString(), "#6 Test Failed. Did you set stringDate correctly?")
+})();
 
 
 
@@ -169,7 +176,7 @@ Hoisting
 (function(){
   "use strict";
 
-  pizza.pizzaMkr();
+
 
   var pizza = {
     sauce: "",
@@ -184,6 +191,12 @@ Hoisting
     }
   }
 
+  pizza.sauceType = "tomato";
+  pizza.protein = "chicken";
+  pizza.orderNow = true;
+  pizza.sauce = true;
+
+  pizza.pizzaMkr();
   console.log("# 7 pizza.pizzaMrk()", pizza.pizzaMkr());
   console.assert(pizza.pizzaMkr() == "We are making your pizza with tomato and chicken. Pickup in 20 minutes.", "#7 Test failed. Did you add the propeties? Did you set the values correctly? Did you fix the hoisting issues?")
 })();
@@ -212,19 +225,22 @@ HINTS:
 (function() {
   "use strict";
 
-  var goodStanding = false;
-  var monthsActive = 2;
+  var goodStanding = true;
+  var monthsActive = 18;
 
   //Do not modify 'name' globaly.
   var name = null;
 
-  accountCheck();
+
 
   var benefit = {}
   //Add properties to 'benefit' using braket notation
+  benefit["credit"] = 50;
+  benefit["discount"] = 5;
 
   var accountCheck = function() {
-
+    // var name = 'James'; // creates a local variable; does not modify global variable
+    name = 'James'; // updates global variable
     var greeting = function() {
 
       return "Hello " + name + ". Here is the status of your account."
@@ -262,7 +278,10 @@ HINTS:
       }
     }
     //Here 'accountCheck' should return both the 'greeting' output and the 'accountStat' output.
+    return greeting() + ' ' + accountStat();
+
   }
+  accountCheck();
 
   console.log("#8 accountCheck():", accountCheck());
   console.assert(name == "James", "Test failed. You should set 'name' to 'james' from within accountCheck()");
@@ -284,7 +303,8 @@ Compartmentalization
   var multiply = 2 * 8;
 
   function duplicate() {
-    multiply = 2 * 10;
+    var multiply = 2 * 10;
+    return;
   };
 
   duplicate();
